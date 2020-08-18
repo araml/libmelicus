@@ -5,8 +5,6 @@
 #include <iostream>
 
 struct song_metadata {
-    int duration; // In seconds.
-    int position;
     std::string file_name;
     std::string title;
     std::string artist;
@@ -14,7 +12,9 @@ struct song_metadata {
     std::string date;
     std::string genre;
     std::string comment;
-    int track_number;
+    std::string track;
+    int duration; // In seconds.
+    int elapsed_time;
 };
 
 std::ostream& operator<<(std::ostream &os, const song_metadata &data) {
@@ -26,6 +26,9 @@ std::ostream& operator<<(std::ostream &os, const song_metadata &data) {
     os << "  date: " << data.date << "\n";
     os << "  genre: " << data.genre << "\n";
     os << "  comment: " << data.comment << "\n";
+    os << "  track: " << data.track << "\n";
+    os << "  duration: " << data.duration << "\n";
+    os << "  elapsed time: " << data.elapsed_time << "\n";
     os << "}";
     return os;
 }
