@@ -1,13 +1,14 @@
 #include <iostream>
-#include <cmus_get_status.h>
-#include <mpd_get_status.h>
+#include <audio_status.hpp>
+
+using namespace audio_status;
 
 int main() {
-    song_metadata c = get_cmus_status();
+    audio_status::audio_status c = get_cmus_status();
     std::cout << c << std::endl;
-
-    song_metadata s = get_mpd_status();
+#ifdef MPD_SUPPORT
+    audio_status::audio_status s = get_mpd_status();
     std::cout << s << std::endl;
-
+#endif
     return 0;
 }
