@@ -10,8 +10,6 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
    add_compile_options (-fcolor-diagnostics)
 endif ()
 
-add_subdirectory(example)
+add_subdirectory(examples)
 add_subdirectory(libmelicus)
-
-#set_source_files_properties(ncurses_mock/ncurses.c PROPERTIES LANGUAGE CXX )
 

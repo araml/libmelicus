@@ -1,4 +1,5 @@
 add_library(melicus SHARED
+            audio_status.cpp
             mpd_get_status.cpp
             cmus_get_status.cpp)
 

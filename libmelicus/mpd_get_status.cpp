@@ -29,7 +29,7 @@ static int handle_error(struct mpd_connection *c) {
 // mpd can return a NULL if the tag doesn't exists so we return an empty str
 #define ine(x) (x ? x : "")
 
-namespace audio_status {
+namespace melicus {
     audio_status get_mpd_status() {
         mpd_connection *conn = mpd_connection_new(NULL, 0, 0);
 

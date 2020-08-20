@@ -49,7 +49,7 @@ std::string find_in(const std::vector<std::string> &v, std::string tag) {
     return "";
 }
 
-namespace audio_status {
+namespace melicus {
     audio_status get_cmus_status() {
         std::string env_path = std::string(getenv("XDG_RUNTIME_DIR"));
         env_path += "/cmus-socket";

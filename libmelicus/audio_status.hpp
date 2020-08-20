@@ -1,10 +1,10 @@
-#ifndef PLAYER_STATUS_H
-#define PLAYER_STATUS_H
+#ifndef AUDIO_STATUS_HXX
+#define AUDIO_STATUS_HXX
 
 #include <string>
 #include <iostream>
 
-namespace audio_status {
+namespace melicus {
     struct audio_status {
         std::string file_name;
         std::string title;
@@ -24,7 +24,7 @@ namespace audio_status {
     audio_status get_cmus_status();
 }
 
-inline std::ostream& operator<<(std::ostream &os, const audio_status::audio_status &data) {
+inline std::ostream& operator<<(std::ostream &os, const melicus::audio_status &data) {
     os << "{\n";
     os << "  file_name: " << data.file_name << "\n";
     os << "  title: " << data.title << "\n";
@@ -40,4 +40,4 @@ inline std::ostream& operator<<(std::ostream &os, const audio_status::audio_stat
     return os;
 }
 
-#endif // PLAYER_STATUS_H
+#endif // AUDIO_STATUS_HXX
