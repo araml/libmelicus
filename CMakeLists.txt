@@ -10,16 +10,8 @@ elseif ("${CMAKE_CXX_COMPILER_ID}" STREQUAL "Clang")
    add_compile_options (-fcolor-diagnostics)
 endif ()
 
-macro(add_files name)
-    file(GLOB ${name} src/${name}/*.h src/${name}/*.cpp src/${name}/*.c)
-    include_directories(src/${name})
-endmacro()
+add_subdirectory(example)
+add_subdirectory(libmelicus)
 
-include_directories(src)
-
-add_executable(libmelicus_ex
-               src/main.cpp
-               src/mpd_get_status.cpp
-               src/cmus_get_status.cpp)
 #set_source_files_properties(ncurses_mock/ncurses.c PROPERTIES LANGUAGE CXX )
 
