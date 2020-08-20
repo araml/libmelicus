@@ -24,7 +24,6 @@ namespace audio_status {
     audio_status get_cmus_status();
 }
 
-
 inline std::ostream& operator<<(std::ostream &os, const audio_status::audio_status &data) {
     os << "{\n";
     os << "  file_name: " << data.file_name << "\n";
