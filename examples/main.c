@@ -1,9 +1,7 @@
 #include <audio_status.h>
 #include <stdio.h>
 
-int main() {
-    audio_status *st = get_cmus_status();
-
+static void print_example(audio_status *st) {
     printf("{\n");
     printf("  file name: %s\n", st->file_name);
     printf("  title: %s\n", st->title);
@@ -16,4 +14,14 @@ int main() {
     printf("  duration: %d\n", st->duration);
     printf("  elapsed time: %d\n", st->elapsed_time);
     printf("}\n");
+
+}
+
+int main() {
+    audio_status *st = get_cmus_status();
+    print_example(st);
+#ifdef MPD_SUPPORT
+    st = get_mpd_status();
+    print_example(st);
+#endif
 }

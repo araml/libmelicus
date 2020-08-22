@@ -25,3 +25,8 @@ extern "C" audio_status *get_cmus_status() {
     melicus::audio_status s = melicus::get_cmus_status();
     return convert_status_to_c(s);
 }
+
+extern "C" audio_status *get_mpd_status() {
+    melicus::audio_status s = melicus::get_mpd_status();
+    return convert_status_to_c(s);
+}

@@ -16,8 +16,10 @@ typedef struct {
 
 #ifdef __cplusplus
     extern "C" audio_status* get_cmus_status();
+    extern "C" audio_status* get_mpd_status();
 #else
     audio_status* get_cmus_status();
+    audio_status* get_mpd_status();
 #endif
 
 

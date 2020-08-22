@@ -62,8 +62,8 @@ namespace melicus {
         sdata.comment = std::string(ine(mpd_song_get_tag(song, MPD_TAG_COMMENT, 0)));
         sdata.file_name = std::string(ine(mpd_song_get_uri(song)));
         sdata.track = ine(mpd_song_get_tag(song, MPD_TAG_TRACK, 0));
-        sdata.duration = mpd_song_get_duration(song);
-        sdata.elapsed_time = mpd_status_get_elapsed_time(status);
+        sdata.duration = (int)mpd_song_get_duration(song);
+        sdata.elapsed_time = (int)mpd_status_get_elapsed_time(status);
 
 
         mpd_song_free(song);
