@@ -20,8 +20,11 @@ static void print_example(audio_status *st) {
 int main() {
     audio_status *st = get_cmus_status();
     print_example(st);
+    audio_status_free(st);
+    st = NULL;
 #ifdef MPD_SUPPORT
     st = get_mpd_status();
     print_example(st);
+    audio_status_free(st);
 #endif
 }

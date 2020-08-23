@@ -16,7 +16,7 @@ It provides a standarized C and C++ API to query the status of several music pla
 
 ## Compilation
 
-You can run the `build.sh` script or config cmake by hand enabling or disabling specific music players. The shared object is located in /build/libmelicus/
+You can run the `build.sh` script or config cmake by hand enabling or disabling specific music players.
 
 It supports any music player that uses **unix sockets** for communication.
 
@@ -40,6 +40,8 @@ melicus::audio_status st = get_cmus_status();
 Will return an audio_status object with all the pertaining information (title, artist, etc. You can check the details in audio_status.hpp)
 
 Alternatively the C api is very similar just with explicit memory deallocation
+
+The shared object is located in /build/libmelicus/, for C include `audio_status.h` and for C++ include `audio_status.hpp`
 
 ```
 audio_status *st = get_cmus_status();

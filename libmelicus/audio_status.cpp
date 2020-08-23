@@ -30,3 +30,15 @@ extern "C" audio_status *get_mpd_status() {
     melicus::audio_status s = melicus::get_mpd_status();
     return convert_status_to_c(s);
 }
+
+extern "C" void audio_status_free(audio_status *st) {
+    free(st->file_name);
+    free(st->title);
+    free(st->artist);
+    free(st->album);
+    free(st->date);
+    free(st->genre);
+    free(st->comment);
+    free(st->track);
+    free(st);
+}
