@@ -1,8 +1,11 @@
 #ifndef AUDIO_STATUS_HXX
 #define AUDIO_STATUS_HXX
 
-#include <string>
+#include <error_enum.h>
+
 #include <iostream>
+#include <string>
+#include <tuple>
 
 namespace melicus {
     struct audio_status {
@@ -19,9 +22,9 @@ namespace melicus {
     };
 
 #ifdef MPD_SUPPORT
-    audio_status get_mpd_status();
+    std::tuple<error_status, audio_status> get_mpd_status();
 #endif
-    audio_status get_cmus_status();
+    std::tuple<error_status, audio_status> get_cmus_status();
 }
 
 inline std::ostream& operator<<(std::ostream &os, const melicus::audio_status &data) {
