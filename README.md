@@ -12,7 +12,7 @@ It provides a standarized C and C++ API to query the status of several music pla
 - [ ] Mpv
 - [ ] mp3blaster
 - [ ] DeadBeef
-- [ ] Spotify
+- [ ] ~~Spotify~~ (The terms of usage seem very bad)
 
 ## Compilation
 
@@ -25,6 +25,8 @@ If a music player uses a custom lib/dbus the support is **disabled** by default 
 For example to enable mpd_support
 
 `cmake -G Ninja -DMPD_SUPPORT=ON ..`
+
+The shared object is located in /build/libmelicus/, for C include `audio_status.h` and for C++ include `audio_status.hpp`
 
 ## Examples
 
@@ -39,12 +41,16 @@ melicus::audio_status st = get_cmus_status();
 
 Will return an audio_status object with all the pertaining information (title, artist, etc. You can check the details in audio_status.hpp)
 
-Alternatively the C api is very similar just with explicit memory deallocation
-
-The shared object is located in /build/libmelicus/, for C include `audio_status.h` and for C++ include `audio_status.hpp`
+Alternatively the C api is very similar just with explicit memory allocation and deallocation
 
 ```
-audio_status *st = get_cmus_status();
-// do something with st..
+audio_status *st = melicus_create_status();
+int err = get_cmus_status(st);
+if (err) {
+    // print error with melicus_perror or get error enum with
+    // melicus_get_error_status()
+} else {
+    // do something with st..
+}
 audio_status_free(st);
 ```
