@@ -18,9 +18,14 @@ static void print_example(audio_status *st) {
 }
 
 int main() {
-    audio_status *st = get_cmus_status();
-    print_example(st);
-    audio_status_free(st);
+    audio_status *st = melicus_create_status();
+    if (get_cmus_status(st)) {
+        printf("Error getting status\n");
+        melicus_perror();
+    } else {
+        print_example(st);
+        audio_status_free(st);
+    }
     st = NULL;
 #ifdef MPD_SUPPORT
     st = get_mpd_status();
