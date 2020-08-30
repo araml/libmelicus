@@ -17,7 +17,17 @@ static void print_example(audio_status *st) {
 
 }
 
+struct opts {
+    char arr[50];
+    int enabled;
+};
+
+//opts options[] = { {"--mpd", false}, {"--mpv", false} };
+
+
 int main() {
+    melicus_init(MPD_SUPPORT);
+
     audio_status *st = melicus_create_status();
     if (get_cmus_status(st)) {
         printf("Error getting status\n");
@@ -27,9 +37,9 @@ int main() {
         audio_status_free(st);
     }
     st = NULL;
-#ifdef MPD_SUPPORT
-    st = get_mpd_status();
-    print_example(st);
+
+    if (!get_mpd_status(st)) {
+        print_example(st);
+    }
     audio_status_free(st);
-#endif
 }

@@ -23,6 +23,18 @@ extern "C" void melicus_perror() {
         puts("NO_SONG_PLAYING");
 }
 
+
+extern "C" int melicus_init(lib_options opts) {
+    if (opts & MPD_SUPPORT) {
+        int err = melicus::init_mpd();
+        if (err)
+            return 1;
+    }
+
+    return 0;
+}
+
+
 static void convert_status_to_c(audio_status *dst, melicus::audio_status &src) {
     COPY_TO(dst->file_name, src.file_name);
     COPY_TO(dst->title, src.title);
@@ -55,12 +67,16 @@ extern "C" int get_cmus_status(audio_status *dst) {
     }
 }
 
-#ifdef MPD_SUPPORT
-extern "C" audio_status *get_mpd_status() {
-    melicus::audio_status s = melicus::get_mpd_status();
-    return convert_status_to_c(s);
+extern "C" int get_mpd_status(audio_status *dst) {
+    auto [error, s] = melicus::get_mpd_status();
+    if (error == OK) {
+        convert_status_to_c(dst, s);
+        return 0;
+    } else {
+        mel_error = error;
+        return 1;
+    }
 }
-#endif
 
 extern "C" void audio_status_free(audio_status *st) {
     free(st->file_name);

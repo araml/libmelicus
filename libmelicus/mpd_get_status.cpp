@@ -1,13 +1,6 @@
-#ifdef MPD_SUPPORT
-
 #include <cassert>
 
-#include <mpd/client.h>
-#include <mpd/status.h>
-#include <mpd/entity.h>
-#include <mpd/search.h>
-#include <mpd/tag.h>
-#include <mpd/message.h>
+#define mpd_connection_new mpd_connection_new_orig
 
 #include <mpd/client.h>
 #include <mpd/status.h>
@@ -15,24 +8,63 @@
 #include <mpd/search.h>
 #include <mpd/tag.h>
 #include <mpd/message.h>
+
+#undef mpd_connection_new
 
 #include <audio_status.hpp>
-
+#include <dlfcn.h>
+/*
 static int handle_error(struct mpd_connection *c) {
     assert(mpd_connection_get_error(c) != MPD_ERROR_SUCCESS);
 
     fprintf(stderr, "%s\n", mpd_connection_get_error_message(c));
     mpd_connection_free(c);
     return EXIT_FAILURE;
-}
+}*/
 
 // mpd can return a NULL if the tag doesn't exists so we return an empty str
 #define ine(x) (x ? x : "")
 
-namespace melicus {
-    audio_status get_mpd_status() {
-        mpd_connection *conn = mpd_connection_new(NULL, 0, 0);
 
+typedef mpd_connection* (*mpd_nnc)(const char *, unsigned int, unsigned int);
+
+mpd_nnc mpd_connection_new;
+
+/*mpd_connection_get_error;
+mpd_command_list_begin;
+mpd_command_list_end;
+mpd_send_status;
+mpd_send_current_song;
+mpd_recv_status;
+mpd_response_next;
+mpd_recv_song;
+mpd_song_free;
+mpd_status_free;
+mpd_connection_free;
+*/
+namespace melicus {
+    int init_mpd() {
+        void *libmpdclient = dlopen("libmpdclient.so", RTLD_LAZY);
+        mpd_connection_new = (mpd_nnc) dlsym(libmpdclient, "mpd_connection_new");
+        /*mpd_connection_get_error = dlsym(libmpdclient, "mpd_connection_get_error");
+        mpd_command_list_begin = dlsym(libmpdclient, "mpd_command_list_begin");
+        mpd_command_list_end = dlsym(libmpdclient, "mpd_command_list_end");
+        mpd_send_status = dlsym(libmpdclient, "mpd_send_status");
+        mpd_send_current_song = dlsym(libmpdclient, "mpd_send_current_song");
+        mpd_recv_status = dlsym(libmpdclient, "mpd_recv_status");
+        mpd_response_next = dlsym(libmpdclient, "mpd_response_next");
+        mpd_recv_song = dlsym(libmpdclient, "mpd_recv_song");
+        mpd_song_free = dlsym(libmpdclient, "mpd_song_free");
+        mpd_status_free = dlsym(libmpdclient, "mpd_status_free");
+        mpd_connection_free = dlsym(libmpdclient, "mpd_connection_free");
+*/
+        return 0;
+    }
+
+    std::tuple<error_status, audio_status> get_mpd_status() {
+        mpd_connection *conn = mpd_connection_new(NULL, 0, 0);
+        (void)conn;
+/*
         if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {
             handle_error(conn);
             return audio_status{};
@@ -69,8 +101,7 @@ namespace melicus {
         mpd_song_free(song);
         mpd_status_free(status);
         mpd_connection_free(conn);
-        return sdata;
+        return sdata;*/
+        return {OK, {}};
     }
 }
-
-#endif // MPD_SUPPORT
