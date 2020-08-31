@@ -36,7 +36,6 @@ int main() {
         print_example(st);
         audio_status_free(st);
     }
-    st = NULL;
 
     if (!get_mpd_status(st)) {
         print_example(st);

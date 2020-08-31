@@ -16,9 +16,11 @@ int main() {
     auto [error, st] = melicus::get_cmus_status();
     print_err(error);
     std::cout << st << std::endl;
-#ifdef MPD_SUPPORT
-    melicus::audio_status s = melicus::get_mpd_status();
-    std::cout << s << std::endl;
-#endif
+
+    melicus::init_mpd();
+
+    auto [error2, st2] = melicus::get_mpd_status();
+
+    std::cout << st2 << std::endl;
     return 0;
 }
