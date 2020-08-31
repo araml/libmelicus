@@ -24,9 +24,11 @@ struct opts {
 
 //opts options[] = { {"--mpd", false}, {"--mpv", false} };
 
+int mpd_on = 0;
 
 int main() {
-    melicus_init(MPD_SUPPORT);
+    if (!melicus_init(MPD_SUPPORT))
+        mpd_on = 1;
 
     audio_status *st = melicus_create_status();
     if (get_cmus_status(st)) {
@@ -34,11 +36,15 @@ int main() {
         melicus_perror();
     } else {
         print_example(st);
-        audio_status_free(st);
     }
 
-    if (!get_mpd_status(st)) {
+    //audio_status_free(st);
+
+    if (mpd_on && !get_mpd_status(st)) {
         print_example(st);
     }
+
     audio_status_free(st);
+
+    melicus_close();
 }

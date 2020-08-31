@@ -22,6 +22,7 @@ namespace melicus {
     };
 
     int init_mpd();
+    void close_mpd();
     std::tuple<error_status, audio_status> get_mpd_status();
     std::tuple<error_status, audio_status> get_cmus_status();
 }

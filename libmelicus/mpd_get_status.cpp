@@ -6,9 +6,6 @@
 #include <audio_status.hpp>
 #include <dlfcn.h>
 
-
-
-
 typedef struct mpd_connection* (*mpd_cn)(const char *, unsigned int, unsigned int);
 mpd_cn mpd_connection_new;
 
@@ -71,9 +68,23 @@ static int handle_error(struct mpd_connection *c) {
 // mpd can return a NULL if the tag doesn't exists so we return an empty str
 #define ine(x) (x ? x : "")
 
+bool mpd_on = false;
+void *libmpdclient;
+
+
 namespace melicus {
     int init_mpd() {
-        void *libmpdclient = dlopen("libmpdclient.so", RTLD_LAZY);
+        libmpdclient = dlopen("libmpdclient.so", RTLD_LAZY);
+
+        // If we can't load the .so file we set a flag letting know the user it
+        // is not available
+        if (!libmpdclient) {
+            mpd_on = false;
+            return 1;
+        } else {
+            mpd_on = true;
+        }
+
         mpd_connection_new = (mpd_cn) dlsym(libmpdclient, "mpd_connection_new");
         mpd_connection_get_error = (mpd_cge) dlsym(libmpdclient, "mpd_connection_get_error");
         mpd_command_list_begin = (mpd_clb) dlsym(libmpdclient, "mpd_command_list_begin");
@@ -91,10 +102,20 @@ namespace melicus {
         mpd_song_get_uri = (mpd_sgu) dlsym(libmpdclient, "mpd_song_get_uri");
         mpd_song_get_duration = (mpd_sgd) dlsym(libmpdclient, "mpd_song_get_duration");
         mpd_status_get_elapsed_time = (mpd_sget) dlsym(libmpdclient, "mpd_status_get_elapsed_time");
+
         return 0;
     }
 
+    void close_mpd() {
+        if (libmpdclient)
+            dlclose(libmpdclient);
+    }
+
     std::tuple<error_status, audio_status> get_mpd_status() {
+        if (!mpd_on) {
+            return {MPD_IS_NOT_LOADED, {}};
+        }
+
         mpd_connection *conn = mpd_connection_new(NULL, 0, 0);
 
         if (mpd_connection_get_error(conn) != MPD_ERROR_SUCCESS) {

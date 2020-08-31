@@ -10,30 +10,27 @@ error_status mel_error = OK;
 
 // TODO: If caller wants to handler their own loggin whatever with err status
 extern "C" char *get_error_status() {
-    return NULL;
+    return (char *) err_strs[mel_error];
 }
 
+std::string last_error;
+
 extern "C" void melicus_perror() {
-    printf("Error: ");
-    if (mel_error == OK)
-        puts("OK");
-    if (mel_error == SERVICE_DOWN)
-        puts("SERVICE DOWN");
-    if (mel_error == NO_SONG_PLAYING)
-        puts("NO_SONG_PLAYING");
+    printf("Error: %s\n", err_strs[mel_error]);
 }
 
 
 extern "C" int melicus_init(lib_options opts) {
     if (opts & MPD_SUPPORT) {
         int err = melicus::init_mpd();
-        if (err)
+        if (err) {
+            mel_error = CANT_LOAD_MPD_DLL;
             return 1;
+        }
     }
 
     return 0;
 }
-
 
 static void convert_status_to_c(audio_status *dst, melicus::audio_status &src) {
     COPY_TO(dst->file_name, src.file_name);
@@ -88,4 +85,8 @@ extern "C" void audio_status_free(audio_status *st) {
     free(st->comment);
     free(st->track);
     free(st);
+}
+
+extern "C" void melicus_close() {
+    melicus::close_mpd();
 }
