@@ -2,6 +2,7 @@ add_library(melicus SHARED
             audio_status.cpp
             mpd_get_status.cpp
             cmus_get_status.cpp
+            mpv_status.cpp
             spotify_get_status.cpp)
 
 include_directories("../libmelicus")

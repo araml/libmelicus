@@ -1,8 +1,7 @@
 #ifndef ERROR_ENUM
 #define ERROR_ENUM
 
-const char err_strs[][64] =
-{
+const char err_strs[][64] = {
    "OK" ,
    "No song playing",
    "Service down",
@@ -17,6 +16,7 @@ enum error_status {
     NULL_STATUS,
     CANT_LOAD_MPD_DLL,
     MPD_IS_NOT_LOADED,
+    CONN_ERROR,
 };
 
 #endif // ERROR_ENUM

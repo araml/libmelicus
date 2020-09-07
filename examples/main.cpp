@@ -15,12 +15,15 @@ static void print_err(error_status &err) {
 int main() {
     auto [error, st] = melicus::get_cmus_status();
     print_err(error);
-    std::cout << st << std::endl;
+    std::cout << "cmus " << std::endl << st << std::endl;
 
     melicus::init_mpd();
 
     auto [error2, st2] = melicus::get_mpd_status();
 
-    std::cout << st2 << std::endl;
+    std::cout << "mpd " << std::endl << st2 << std::endl;
+
+    auto [error3, st3] = melicus::mpv_status();
+    std::cout << "mpv" << std::endl << st3 << std::endl;
     return 0;
 }

@@ -3,8 +3,11 @@
 #include <audio_status.h>
 #include <audio_status.hpp>
 
-#define COPY_TO(x, y) x = (char *)malloc(y.size() + 1); \
-                      strcpy(x, y.c_str());
+#define COPY_TO(x, y)                 \
+    if (x)                            \
+        free(x);                      \
+    x = (char *)malloc(y.size() + 1); \
+    strcpy(x, y.c_str());
 
 error_status mel_error = OK;
 
@@ -46,7 +49,17 @@ static void convert_status_to_c(audio_status *dst, melicus::audio_status &src) {
 }
 
 extern "C" audio_status* melicus_create_status() {
-    return (audio_status *)malloc(sizeof(audio_status));
+    audio_status *as = (audio_status *)malloc(sizeof(audio_status));
+    as->file_name = NULL;
+    as->title = NULL;
+    as->artist = NULL;
+    as->album = NULL;
+    as->date = NULL;
+    as->genre = NULL;
+    as->comment = NULL;
+    as->track = NULL;
+    as->duration = as->elapsed_time = 0;
+    return as;
 }
 
 extern "C" int get_cmus_status(audio_status *dst) {

@@ -22,7 +22,6 @@ struct opts {
     int enabled;
 };
 
-//opts options[] = { {"--mpd", false}, {"--mpv", false} };
 
 int mpd_on = 0;
 
@@ -37,8 +36,6 @@ int main() {
     } else {
         print_example(st);
     }
-
-    //audio_status_free(st);
 
     if (mpd_on && !get_mpd_status(st)) {
         print_example(st);
