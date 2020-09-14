@@ -13,13 +13,13 @@ static void print_err(error_status &err) {
 }
 
 int main() {
-    auto [error, st] = melicus::get_cmus_status();
+    auto [error, st] = melicus::cmus_status();
     print_err(error);
     std::cout << "cmus " << std::endl << st << std::endl;
 
-    melicus::init_mpd();
+    melicus::mpd_init();
 
-    auto [error2, st2] = melicus::get_mpd_status();
+    auto [error2, st2] = melicus::mpd_status();
 
     std::cout << "mpd " << std::endl << st2 << std::endl;
 

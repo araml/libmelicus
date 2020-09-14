@@ -72,7 +72,7 @@ bool mpd_on = false;
 void *libmpdclient;
 
 namespace melicus {
-    int init_mpd() {
+    int mpd_init() {
         libmpdclient = dlopen("libmpdclient.so", RTLD_LAZY);
 
         // If we can't load the .so file we set a flag letting know the user it
@@ -105,12 +105,12 @@ namespace melicus {
         return 0;
     }
 
-    void close_mpd() {
+    void mpd_close() {
         if (libmpdclient)
             dlclose(libmpdclient);
     }
 
-    std::tuple<error_status, audio_status> get_mpd_status() {
+    std::tuple<error_status, audio_status> mpd_status() {
         if (!mpd_on) {
             return {MPD_IS_NOT_LOADED, {}};
         }
@@ -127,7 +127,7 @@ namespace melicus {
         mpd_send_current_song(conn);
         mpd_command_list_end(conn);
 
-        mpd_status *status = mpd_recv_status(conn);
+        struct mpd_status *status = mpd_recv_status(conn);
         if (status)
             mpd_response_next(conn);
 

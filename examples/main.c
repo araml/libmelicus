@@ -30,14 +30,14 @@ int main() {
         mpd_on = 1;
 
     audio_status *st = melicus_create_status();
-    if (get_cmus_status(st)) {
+    if (cmus_status(st)) {
         printf("Error getting status\n");
         melicus_perror();
     } else {
         print_example(st);
     }
 
-    if (mpd_on && !get_mpd_status(st)) {
+    if (mpd_on && !mpd_status(st)) {
         print_example(st);
     }
 

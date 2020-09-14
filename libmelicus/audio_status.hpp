@@ -21,10 +21,10 @@ namespace melicus {
         int elapsed_time;
     };
 
-    int init_mpd();
-    void close_mpd();
-    std::tuple<error_status, audio_status> get_mpd_status();
-    std::tuple<error_status, audio_status> get_cmus_status();
+    int mpd_init();
+    void mpd_close();
+    std::tuple<error_status, audio_status> mpd_status();
+    std::tuple<error_status, audio_status> cmus_status();
     std::tuple<error_status, audio_status> mpv_status();
 }
 

@@ -69,7 +69,7 @@ static int str_to_int(const std::string &s) {
 }
 
 namespace melicus {
-    std::tuple<error_status, audio_status> get_cmus_status() {
+    std::tuple<error_status, audio_status> cmus_status() {
         std::string env_path = std::string(getenv("XDG_RUNTIME_DIR"));
         env_path += "/cmus-socket";
 

@@ -25,7 +25,7 @@ extern "C" void melicus_perror() {
 
 extern "C" int melicus_init(lib_options opts) {
     if (opts & MPD_SUPPORT) {
-        int err = melicus::init_mpd();
+        int err = melicus::mpd_init();
         if (err) {
             mel_error = CANT_LOAD_MPD_DLL;
             return 1;
@@ -62,12 +62,12 @@ extern "C" audio_status* melicus_create_status() {
     return as;
 }
 
-extern "C" int get_cmus_status(audio_status *dst) {
+extern "C" int cmus_status(audio_status *dst) {
     if (!dst) {
         mel_error = NULL_STATUS;
         return 1;
     }
-    auto [error, s] = melicus::get_cmus_status();
+    auto [error, s] = melicus::cmus_status();
     if (error == OK) {
         convert_status_to_c(dst, s);
         return 0;
@@ -77,8 +77,8 @@ extern "C" int get_cmus_status(audio_status *dst) {
     }
 }
 
-extern "C" int get_mpd_status(audio_status *dst) {
-    auto [error, s] = melicus::get_mpd_status();
+extern "C" int mpd_status(audio_status *dst) {
+    auto [error, s] = melicus::mpd_status();
     if (error == OK) {
         convert_status_to_c(dst, s);
         return 0;
@@ -101,5 +101,5 @@ extern "C" void audio_status_free(audio_status *st) {
 }
 
 extern "C" void melicus_close() {
-    melicus::close_mpd();
+    melicus::mpd_close();
 }
