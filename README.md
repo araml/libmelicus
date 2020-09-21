@@ -9,22 +9,16 @@ It provides a standarized C and C++ API to query the status of several music pla
 - [x] cmus
 - [x] mpd
 - [ ] Moc
-- [ ] Mpv
+- [x] Mpv
 - [ ] mp3blaster
 - [ ] DeadBeef
 - [ ] ~~Spotify~~ (The terms of usage seem very bad)
 
 ## Compilation
 
-You can run the `build.sh` script or config cmake by hand enabling or disabling specific music players.
+You can run the `build.sh` script or if you wish run cmake by hand.
 
-It supports any music player that uses **unix sockets** for communication.
-
-If a music player uses a custom lib/dbus the support is **disabled** by default and must be enabled.
-
-For example to enable mpd_support
-
-`cmake -G Ninja -DMPD_SUPPORT=ON ..`
+If a music player doesn't use unix sockets for IPC, like a custom lib or dbus then you need to initialize this **before** doing any function call (see examples/)
 
 The shared object is located in /build/libmelicus/, for C include `audio_status.h` and for C++ include `audio_status.hpp`
 
@@ -32,7 +26,7 @@ The shared object is located in /build/libmelicus/, for C include `audio_status.
 
 You can check the examples folder for complete examples/test that it works with your selected music player
 
-It is very easy to use:
+Still the library is very easy to use:
 
 ```
 melicus::audio_status st = get_cmus_status();
@@ -45,7 +39,7 @@ Alternatively the C api is very similar just with explicit memory allocation and
 
 ```
 audio_status *st = melicus_create_status();
-int err = get_cmus_status(st);
+int err = cmus_status(st);
 if (err) {
     // print error with melicus_perror or get error enum with
     // melicus_get_error_status()
@@ -54,3 +48,14 @@ if (err) {
 }
 audio_status_free(st);
 ```
+
+### Extra libraries
+
+As said before you need to initialize anything that doesn't use unix sockets by
+default (you need to get the pertaining library in that case)
+
+For example to use the mpd functions you need to first install libmpdclient and
+then initialize it with:
+
+`melicus_init(MPD_SUPPORT)`
+
