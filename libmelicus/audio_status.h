@@ -24,9 +24,11 @@ typedef enum {
 #ifdef __cplusplus
 extern "C" {
 #endif
-
     int cmus_status(audio_status *dst);
     int mpd_status(audio_status *dst);
+    int mpv_status(audio_status *dst);
+    int moc_status(audio_status *dst);
+
     void audio_status_free(audio_status *dst);
 
     int melicus_init(lib_options opts);

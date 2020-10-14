@@ -88,6 +88,28 @@ extern "C" int mpd_status(audio_status *dst) {
     }
 }
 
+extern "C" int mpv_status(audio_status *dst) {
+    auto [error, s] = melicus::mpv_status();
+    if (error == OK) {
+        convert_status_to_c(dst, s);
+        return 0;
+    } else {
+        mel_error = error;
+        return 1;
+    }
+}
+
+extern "C" int moc_status(audio_status *dst) {
+    auto [error, s] = melicus::moc_status();
+    if (error == OK) {
+        convert_status_to_c(dst, s);
+        return 0;
+    } else {
+        mel_error = error;
+        return 1;
+    }
+}
+
 extern "C" void audio_status_free(audio_status *st) {
     free(st->file_name);
     free(st->title);

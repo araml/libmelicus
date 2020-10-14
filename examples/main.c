@@ -41,6 +41,11 @@ int main() {
         print_example(st);
     }
 
+    printf("mocp\n");
+    if (!moc_status(st)) {
+        print_example(st);
+    }
+
     audio_status_free(st);
 
     melicus_close();
