@@ -25,5 +25,8 @@ int main() {
 
     auto [error3, st3] = melicus::mpv_status();
     std::cout << "mpv" << std::endl << st3 << std::endl;
+
+    auto [error4, st4] = melicus::moc_status();
+    std::cout << "moc" << std::endl << st4 << std::endl;
     return 0;
 }

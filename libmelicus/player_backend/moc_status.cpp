@@ -9,7 +9,7 @@
 #include <string>
 #include <iostream>
 
-//#include <../audio_status.hpp>
+#include <../audio_status.hpp>
 
 static bool get_line(int fd, std::string *s) {
     while (true) {
@@ -40,9 +40,9 @@ std::vector<std::string> mocp_info() {
         close(pipe_err[0]);
         dup2(pipe_fd[1], STDOUT_FILENO);
         dup2(pipe_err[1], STDERR_FILENO);
-        char bin[] = "/usr/bin/mocp";
-        char *args[3] = {"mocp", "--info", NULL};
-        execvp(bin, args);
+        const char bin[] = "/usr/bin/mocp";
+        const char *args[3] = {"mocp", "--info", NULL};
+        execvp(bin, (char* const *)args);
         return {};
     } else {
         close(pipe_fd[1]);
@@ -80,6 +80,7 @@ AvgBitrate: 128kbps
 Rate: 44kHz
 */
 
+/*
 static std::string find_tag(std::vector<std::string> &info, std::string tag) {
     std::string tag_info{""};
     for (auto &v : info) {
@@ -95,19 +96,50 @@ static std::string find_tag(std::vector<std::string> &info, std::string tag) {
     }
 
     return tag_info;
-}
 
-void moc_status() {
-    std::vector<std::string> info = mocp_info();
-
-    for (auto &vv : info) {
-        std::cout << vv << std::endl;
+*/
+std::string find_tag(const std::vector<std::string> &v, std::string tag) {
+    for (auto &s : v) {
+        size_t pos = s.find(tag);
+        if (pos != std::string::npos) {
+            return s.substr(tag.size(), s.size());
+        }
     }
 
-    std::cout << find_tag(info, "File: ") << std::endl;
-    std::cout << find_tag(info, "Title: ") << std::endl;
+    return "";
 }
 
-int main() {
-    moc_status();
+static int str_to_int(const std::string &s) {
+    if (s.empty())
+        return -1;
+
+    try {
+        return stoi(s);
+    } catch (...) {
+        return -1;
+    }
 }
+
+
+// TODO: STOP MUSIC CASE (State: STOP)
+// TODO: MOCP OFFLINE (FATAL_ERROR: The server is not running!)
+namespace melicus {
+    std::tuple<error_status, audio_status> moc_status() {
+        std::vector<std::string> info = mocp_info();
+
+        audio_status status;
+
+        status.file_name = find_tag(info, "File: ");
+        status.title = find_tag(info, "Title: ");
+        status.artist = find_tag(info, "Artist: ");
+        status.album = find_tag(info, "Album: ");
+        status.duration = str_to_int(find_tag(info, "TotalSec: "));
+        status.elapsed_time = str_to_int(find_tag(info, "CurrentSec: "));
+        /* NOTE: no apparent way to get date/genre/comment/track number with mocp */
+        /* TODO: Inspect source to see if we can by talking to the server directly */
+
+
+        return {OK, status};
+    }
+}
+

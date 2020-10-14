@@ -26,6 +26,7 @@ namespace melicus {
     std::tuple<error_status, audio_status> mpd_status();
     std::tuple<error_status, audio_status> cmus_status();
     std::tuple<error_status, audio_status> mpv_status();
+    std::tuple<error_status, audio_status> moc_status();
 }
 
 inline std::ostream& operator<<(std::ostream &os, const melicus::audio_status &data) {
