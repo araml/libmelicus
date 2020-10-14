@@ -8,7 +8,7 @@ It provides a standarized C and C++ API to query the status of several music pla
 
 - [x] cmus
 - [x] mpd
-- [ ] Moc
+- [x] Moc (partial)
 - [x] Mpv
 - [ ] mp3blaster
 - [ ] DeadBeef
