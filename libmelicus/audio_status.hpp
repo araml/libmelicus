@@ -21,12 +21,15 @@ namespace melicus {
         int elapsed_time;
     };
 
+    // TODO(aram): maybe change this to a struct?..
+    using status = std::tuple<error_status, audio_status>;
+
     int mpd_init();
     void mpd_close();
-    std::tuple<error_status, audio_status> mpd_status();
-    std::tuple<error_status, audio_status> cmus_status();
-    std::tuple<error_status, audio_status> mpv_status();
-    std::tuple<error_status, audio_status> moc_status();
+    status mpd_status();
+    status cmus_status();
+    status mpv_status();
+    status moc_status();
 }
 
 inline std::ostream& operator<<(std::ostream &os, const melicus::audio_status &data) {
