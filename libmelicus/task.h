@@ -3,31 +3,82 @@
 #include <audio_status.hpp>
 
 #include <mutex>
+#include <thread>
 #include <atomic>
 #include <condition_variable>
 
+#include <iostream>
 
-struct task { 
-    template <typename callable, typename... Args>
-    task(callable fn, Args &&... args) { 
-        while (true) { 
-            fn(static_cast<Args &&>(args)...);              
+template <typename RetVal>
+struct task {
+    template <typename Fn, typename... Args>
+    task(Fn fn, Args &&... args) {
+        runnable = new std::thread([fn, this](Args &&... args) {
+            while (true) {
+                std::unique_lock<std::mutex> lk(mtx);
+                run.wait(lk, [this]() -> bool { return ready; });
+
+                if (stop)
+                    break;
+
+                return_value.store(fn(static_cast<Args &&>(args)...)); // fwd
+                ready.store(false);
+            }
+        }, args...);
+    }
+
+    ~task() { 
+        end();
+        if (runnable->joinable())
+            runnable->join();
+        delete runnable;
+    }
+    
+    auto is_running() -> bool { 
+        /*std::unique_lock<std::mutex> lk(mtx, std::try_to_lock);
+        if (lk.owns_lock()) { 
+            return ready;
+        } else { // if we couldn't grab the lock assume its running
+            return true;
+        }*/
+        return ready;
+    }
+
+    auto query() -> void {
+        std::unique_lock<std::mutex> lk(mtx);
+        ready.store(true);
+        lk.unlock();
+        run.notify_one();
+    }
+
+    auto get() -> RetVal { 
+        std::unique_lock<std::mutex> lk(mtx);
+        //std::cout << "Retval" << std::endl;
+        if (ready) { 
+            lk.unlock();
+            while (ready) {}
+        } else { 
+            lk.unlock();
+            query();
+            while (ready) {}
         }
+        
+        return return_value;
     }
 
-    auto query() -> void { 
-
-    }
-
-    auto get() -> melicus::status { 
-        return melicus::status{};
-    }
-
-
+    std::atomic<bool> ready{false}, stop{false};
 private:
-    std::atomic<bool> ready, terminate;
-    std::mutex mtx;
-    std::condition_variable cond;
+    auto end() -> void { 
+        std::lock_guard<std::mutex> lock(mtx);
+        stop.store(true);
+        ready.store(true);
+        run.notify_one();
+    }
+    
+    std::atomic<RetVal> return_value;
+    std::thread *runnable;
+    std::mutex mtx, qu;
+    std::condition_variable run;
 
 };
 
