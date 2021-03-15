@@ -20,9 +20,10 @@ struct task {
 
                 if (stop)
                     break;
-
+                
                 return_value.store(fn(static_cast<Args &&>(args)...)); // fwd
                 ready.store(false);
+                result_available.store(true);
             }
         }, args...);
     }
@@ -35,39 +36,47 @@ struct task {
     }
     
     auto is_running() -> bool { 
-        /*std::unique_lock<std::mutex> lk(mtx, std::try_to_lock);
-        if (lk.owns_lock()) { 
-            return ready;
-        } else { // if we couldn't grab the lock assume its running
-            return true;
-        }*/
         return ready;
     }
 
     auto query() -> void {
         std::unique_lock<std::mutex> lk(mtx);
-        ready.store(true);
-        lk.unlock();
-        run.notify_one();
+        // this could be a problem if we didnt hold the lock
+        if (ready || result_available)
+            return;
+        else 
+            internal_query();
+    }
+
+    auto wait_for() -> void {
+        while (!result_available) {}
     }
 
     auto get() -> RetVal { 
         std::unique_lock<std::mutex> lk(mtx);
-        //std::cout << "Retval" << std::endl;
+       
         if (ready) { 
             lk.unlock();
-            while (ready) {}
-        } else { 
+            wait_for();
+        } else if (!result_available) {
+            internal_query();
             lk.unlock();
-            query();
-            while (ready) {}
+            wait_for();    
         }
         
+        // consume result
+        result_available.store(false);
         return return_value;
     }
 
-    std::atomic<bool> ready{false}, stop{false};
+    std::atomic<bool> ready{false}, result_available{false}, stop{false};
 private:
+    // Should be called with a lock taken
+    auto internal_query() -> void { 
+        ready.store(true);
+        run.notify_one();
+    }
+
     auto end() -> void { 
         std::lock_guard<std::mutex> lock(mtx);
         stop.store(true);
@@ -77,7 +86,7 @@ private:
     
     std::atomic<RetVal> return_value;
     std::thread *runnable;
-    std::mutex mtx, qu;
+    std::mutex mtx;
     std::condition_variable run;
 
 };

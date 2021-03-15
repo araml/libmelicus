@@ -2,7 +2,7 @@
 #include <cassert>
 #include <iostream>
 
-int main() {
+auto foo() -> int { 
     int ctr = 0;
     task<int> t([&ctr]() -> int {
         ctr = ctr + 1;
@@ -15,13 +15,21 @@ int main() {
         if (!t.is_running()) {
             t.query();
             int s = t.get();
-            std::cout << s << std::endl;
+            //std::cout << s << std::endl;
             sum += static_cast<size_t>(s);
             i++;
         }
     }
-        
-    std::cout << sum << std::endl;
+    
+
+    return sum;
+}
+
+int main() {
+    for (size_t i = 0; i < 100000; i++) { 
+        std::cout << i << std::endl;
+        assert(foo() == 5050);
+    }
 
     return 0;
 }
