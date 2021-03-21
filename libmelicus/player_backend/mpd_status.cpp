@@ -1,10 +1,19 @@
+#include <tuple>
 #include <cassert>
 #include <dlfcn.h>
+#include <stdio.h>
+#include <string> 
+#include <stdlib.h>
+#include <iostream>
 
 #include <mpd/tag.h>
 #include <mpd/error.h>
 
+#include <error_enum.h>
 #include <audio_status.hpp>
+
+struct mpd_song;
+struct mpd_connection;
 
 typedef struct mpd_connection* (*mpd_cn)(const char *, unsigned int, unsigned int);
 mpd_cn mpd_connection_new;

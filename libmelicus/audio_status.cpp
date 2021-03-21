@@ -22,7 +22,6 @@ extern "C" void melicus_perror() {
     printf("Error: %s\n", err_strs[mel_error]);
 }
 
-
 extern "C" int melicus_init(lib_options opts) {
     if (opts & MPD_SUPPORT) {
         int err = melicus::mpd_init();

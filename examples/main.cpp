@@ -1,4 +1,5 @@
 #include <iostream>
+#include <error_enum.h>
 #include <audio_status.hpp>
 
 using namespace melicus;
