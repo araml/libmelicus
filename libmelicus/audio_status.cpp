@@ -1,5 +1,7 @@
-#include <string.h>
 #include <cstdio>
+#include <stdlib.h>
+#include <string.h>
+#include <error_enum.h>
 #include <audio_status.h>
 #include <audio_status.hpp>
 

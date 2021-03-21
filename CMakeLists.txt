@@ -21,7 +21,6 @@ add_subdirectory(libmelicus)
 
 if (BUILD_TESTS)
     macro(add_custom_test name file)
-        message(${name})
         string(REGEX REPLACE "(^.*/|\\.[^.]*$)" "" bare_name ${file})
         add_executable(${name} ${file} ${ARGN})
         include_directories(libmelicus)

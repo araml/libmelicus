@@ -1,35 +1,21 @@
-#include <netdb.h>
-#include <sys/un.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <stdlib.h>
 #include <string>
-#include <iostream>
-#include <errno.h>
-#include <string.h>
-#include <unistd.h>
-#include <thread>
+#include <stdio.h>
 #include <chrono>
-#include <arpa/inet.h>
-
-#include <audio_status.hpp>
+#include <string.h>
+#include <stdlib.h>
+#include <unistd.h>
 #include <vector>
-#include <sstream>
+#include <iterator>
+#include <tuple>
+#include <algorithm>
+#include <sys/un.h>
+#include <sys/socket.h>
+
+#include <utils.h>
+#include <error_enum.h>
+#include <audio_status.hpp>
 
 using namespace std::chrono;
-
-static inline std::vector<std::string> split_string(std::string line) {
-    std::stringstream ss(line);
-    std::string word;
-    std::vector<std::string> words;
-    while (std::getline(ss, word, '\n')) {
-        words.emplace_back(word);
-    }
-
-    return words;
-}
-
-#include <algorithm>
 
 template <typename T, typename Predicate>
 std::vector<T> filter(const std::vector<T> &v, Predicate p) {

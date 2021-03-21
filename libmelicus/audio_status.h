@@ -1,8 +1,6 @@
 #ifndef AUDIO_STATUS_H
 #define AUDIO_STATUS_H
 
-#include <error_enum.h>
-
 typedef struct {
     char *file_name;
     char *title;

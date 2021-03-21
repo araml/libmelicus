@@ -1,14 +1,11 @@
-#include <unistd.h>
-#include <string.h>
-#include <fcntl.h>
-#include <stdbool.h>
-#include <stdio.h>
+#include <tuple>
 #include <vector>
 #include <string>
-#include <iostream>
+#include <stdio.h>
 
-#include <../fork.h>
-#include <../audio_status.hpp>
+#include <fork.h>
+#include <error_enum.h>
+#include <audio_status.hpp>
 
 /* State: PAUSE
 File:

@@ -1,12 +1,12 @@
-#include <netdb.h>
-#include <sys/un.h>
-#include <sys/types.h>
-#include <sys/socket.h>
-#include <stdlib.h>
 #include <string>
-#include <iostream>
+#include <vector>
+#include <tuple>
 #include <unistd.h>
 #include <json.hpp>
+#include <stdio.h>
+#include <sys/un.h>
+#include <sys/socket.h>
+#include <initializer_list>
 
 #include <error_enum.h>
 #include <audio_status.hpp>
