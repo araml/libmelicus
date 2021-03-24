@@ -11,7 +11,7 @@ It provides a standarized C and C++ API to query the status of several music pla
 - [x] Moc (partial)
 - [x] Mpv
 - [ ] mp3blaster
-- [ ] DeadBeef
+- [x] DeadBeef (partial, missing song duration/elapsed times)
 - [ ] ~~Spotify~~ (The terms of usage seem very bad)
 
 ## Compilation
