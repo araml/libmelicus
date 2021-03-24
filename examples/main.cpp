@@ -29,5 +29,9 @@ int main() {
 
     auto [error4, st4] = melicus::moc_status();
     std::cout << "moc" << std::endl << st4 << std::endl;
+
+    auto [error5, st5] = melicus::deadbeef_status();
+    std::cout << "deadbeef" << std::endl << st5 << std::endl;
+
     return 0;
 }

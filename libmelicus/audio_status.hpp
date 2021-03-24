@@ -30,6 +30,7 @@ namespace melicus {
     status cmus_status();
     status mpv_status();
     status moc_status();
+    status deadbeef_status();
 }
 
 inline std::ostream& operator<<(std::ostream &os, const melicus::audio_status &data) {
