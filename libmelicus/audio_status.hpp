@@ -17,8 +17,8 @@ namespace melicus {
         std::string genre;
         std::string comment;
         std::string track;
-        int duration; // In seconds.
-        int elapsed_time;
+        int duration{0}; // In seconds.
+        int elapsed_time{0};
     };
 
     // TODO(aram): maybe change this to a struct?..

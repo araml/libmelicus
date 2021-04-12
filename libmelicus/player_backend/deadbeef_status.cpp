@@ -12,25 +12,48 @@
 #include <error_enum.h>
 #include <audio_status.hpp>
 
-std::string deadbeef_nowplaying(std::string fmt) { 
-    std::string socket_dir = std::string(getenv("XDG_RUNTIME_DIR")) + 
-                             "/deadbeef/socket";
+int try_connect_deadbeef(const char *path, size_t path_size) { 
+
     struct sockaddr_un sock_addr;
     memset(&sock_addr, 0, sizeof(sock_addr));
     sock_addr.sun_family = AF_UNIX;
-    memcpy(sock_addr.sun_path, socket_dir.data(), socket_dir.size());
+    memcpy(sock_addr.sun_path, path, path_size);
 
     int sockfd = socket(sock_addr.sun_family, SOCK_STREAM, 0);
     if (sockfd == -1) { 
         perror("socket");
-        return {SERVICE_DOWN, {}}; // TODO(aram): maybe SETUP_ERR code?
+        return -1; // TODO(aram): maybe SETUP_ERR code?
     }
 
     if (connect(sockfd, 
                 (struct sockaddr *)&sock_addr, sizeof(sock_addr)) == -1) { 
         perror("Connect error");
-        return {SERVICE_DOWN, {}};
+        return -1;
     }
+
+    return sockfd;
+}
+
+std::string deadbeef_nowplaying(std::string fmt) { 
+    // First we try connecting to the default socket path
+    // (The one you would get if you compile deadbeef yourself)
+    std::string socket_dir = std::string(getenv("XDG_RUNTIME_DIR")) + 
+                             "/deadbeef/socket";
+    int sockfd = try_connect_deadbeef(socket_dir.c_str(), socket_dir.size());
+    if (sockfd != -1)    
+        goto now_playing;
+
+    // Use the snap path :/
+    socket_dir = std::string(getenv("HOME")) +
+                 "/snap/deadbeef-vs/5/.config/deadbeef/socket";
+    std::cout << "Socket dir " << socket_dir;
+    sockfd = try_connect_deadbeef(socket_dir.c_str(), socket_dir.size());
+    if (sockfd != -1)
+        goto now_playing;
+
+    return "";
+
+now_playing:
 
     std::string null_term(1, '\0');
     std::string deadbeef_cmd = "--nowplaying" + null_term + fmt;
